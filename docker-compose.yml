@@ -13,7 +13,7 @@ services:
     environment:
       - PORT=3000
       # Set this to enable the results password gate
-      - RESULTS_PASSWORD=change-me-to-your-chosen-password
+      - "RESULTS_PASSWORD=stratford2026J&B"
       # Optional: set this to enable the DELETE /api/votes admin endpoint
       # - ADMIN_TOKEN=change-me-to-something-long-and-random
     # If your Cloudflare Tunnel runs as a sibling container, drop the `ports:`
