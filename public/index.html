@@ -323,6 +323,43 @@
   .confetti { position: fixed; pointer-events: none; z-index: 200; animation: float-up 1.5s ease-out forwards; }
 
   .hidden { display: none !important; }
+
+  /* ---- MOBILE ---- */
+  @media (max-width: 600px) {
+    .hero { padding: 3rem 1rem 1.5rem; }
+    .hero-blurb { font-size: 1.1rem; }
+
+    /* Dress grid: shrink minimum so it doesn't overflow narrow phones */
+    .dresses { grid-template-columns: 1fr; gap: 1.5rem; padding: 0.5rem 0 2.5rem; }
+
+    /* Shorter image on mobile — dresses are tall enough on a small screen */
+    .dress-img-wrap { aspect-ratio: 3/4; }
+
+    .dress-info { padding: 1.2rem 1rem; }
+
+    /* Results gate: stack input + button vertically */
+    .results-gate { margin-bottom: 2.5rem; }
+    .results-gate-form {
+      flex-direction: column;
+      max-width: 100%;
+      margin-top: 1rem;
+    }
+    .results-gate-form input,
+    .results-gate-form button { width: 100%; }
+
+    /* Modal: tighter padding so it doesn't feel cramped */
+    .modal-backdrop { padding: 1rem; }
+    .modal { padding: 1.5rem 1rem; }
+    .modal-actions { flex-direction: column; }
+    .modal-actions button { flex: none; width: 100%; }
+
+    /* Privacy notice */
+    .privacy-notice { padding: 1rem 1rem; font-size: 1rem; margin-bottom: 1.5rem; }
+
+    /* Admin + footer spacing */
+    .admin { padding: 1.5rem 0 2rem; margin-top: 1.5rem; }
+    footer { padding: 1rem 1rem 2rem; }
+  }
 </style>
 </head>
 <body>
