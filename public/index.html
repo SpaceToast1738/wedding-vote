@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Final Three — Cast Your Vote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f1e8;
+    --bg-soft: #ebe4d2;
+    --paper: #fbf8f0;
+    --ink: #2c3528;
+    --ink-soft: #4a5340;
+    --moss: #6b7c5a;
+    --moss-deep: #4a5840;
+    --sage: #a8b598;
+    --sage-pale: #d4dcc4;
+    --bark: #6b5b3f;
+    --rust: #a86840;
+    --gold: #b89548;
+    --line: rgba(74,88,64,0.18);
+    --shadow: 0 20px 50px -20px rgba(74,88,64,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(168,181,152,0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(184,149,72,0.07) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 5vw; }
+
+  /* HERO */
+  .hero { text-align: center; padding: 5rem 2rem 2rem; }
+  .hero-mark { font-family: 'Caveat', cursive; font-size: 1.4rem; color: var(--moss); margin-bottom: 0.5rem; }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.95;
+    color: var(--ink); letter-spacing: -0.02em; margin-bottom: 1.5rem;
+  }
+  .hero-title em { font-style: italic; color: var(--moss-deep); }
+  .hero-divider { display: flex; align-items: center; gap: 1rem; max-width: 360px; margin: 1.5rem auto; }
+  .hero-divider .line { flex: 1; height: 1px; background: var(--moss); opacity: 0.4; }
+  .hero-divider svg { width: 24px; height: 24px; color: var(--moss); }
+  .hero-blurb {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.25rem; color: var(--ink-soft); max-width: 580px;
+    margin: 1.5rem auto; line-height: 1.5;
+  }
+
+  .vote-status {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    margin-top: 1rem; padding: 0.5rem 1.5rem;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 999px;
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--ink-soft);
+  }
+  .vote-status .dot {
+    width: 8px; height: 8px; background: var(--moss); border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .vote-status.private .dot { background: var(--bark); }
+
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* PRIVACY NOTICE */
+  .privacy-notice {
+    max-width: 640px; margin: 0 auto 2.5rem; padding: 1.2rem 1.6rem;
+    background: var(--paper); border-left: 3px solid var(--moss);
+    font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic;
+    color: var(--ink-soft); line-height: 1.5;
+  }
+  .privacy-notice strong {
+    font-style: normal; font-family: 'Inter', sans-serif; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss-deep);
+    display: block; margin-bottom: 0.3rem; font-weight: 500;
+  }
+
+  /* DRESS GRID */
+  .dresses { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; padding: 1rem 0 4rem; }
+
+  .dress {
+    background: var(--paper); border: 1px solid var(--line); overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s ease;
+    position: relative;
+  }
+  .dress:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+  .dress.is-leading { border-color: var(--rust); border-width: 2px; }
+
+  .leading-tag {
+    position: absolute; top: 1rem; right: 1rem; z-index: 3;
+    background: var(--rust); color: var(--paper);
+    font-family: 'Caveat', cursive; font-size: 1.05rem;
+    padding: 0.3rem 1rem; transform: rotate(3deg); display: none;
+  }
+  .dress.is-leading .leading-tag { display: block; }
+
+  .dress-letter {
+    position: absolute; top: 1rem; left: 1rem; z-index: 2;
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.7rem; color: var(--paper); background: var(--moss-deep);
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-weight: 400;
+  }
+
+  .dress-img-wrap { aspect-ratio: 4/5; background: var(--sage-pale); overflow: hidden; }
+  .dress-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; display: block; }
+  .dress:hover .dress-img-wrap img { transform: scale(1.04); }
+  .dress-img-wrap.no-img {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--moss-deep); font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1rem; text-align: center; padding: 2rem;
+    background: linear-gradient(135deg, var(--sage-pale) 0%, var(--bg-soft) 100%);
+    line-height: 1.4;
+  }
+
+  .dress-info { padding: 1.8rem 1.6rem; flex: 1; display: flex; flex-direction: column; }
+  .dress-retailer { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--moss); margin-bottom: 0.6rem; }
+  .dress-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; line-height: 1.2; margin-bottom: 0.6rem; font-weight: 400; }
+  .dress-price { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--moss-deep); margin-bottom: 1rem; font-weight: 500; }
+  .dress-notes { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1.2rem; flex: 1; }
+  .dress-link {
+    display: inline-block; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.18em; color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--moss); padding-bottom: 0.3rem;
+    margin-bottom: 1.5rem; align-self: flex-start;
+  }
+  .dress-link:hover { color: var(--moss-deep); }
+
+  .vote-section { border-top: 1px dashed var(--line); padding-top: 1.2rem; margin-top: auto; }
+  .vote-meta { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
+  .vote-count { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--moss-deep); font-weight: 500; }
+  .vote-count em { font-style: italic; font-size: 0.9rem; color: var(--ink-soft); font-weight: 400; margin-left: 0.4rem; }
+  .vote-percent { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-soft); }
+  .vote-bar { height: 6px; background: var(--bg-soft); border-radius: 3px; overflow: hidden; margin-bottom: 1rem; }
+  .vote-bar-fill { height: 100%; background: linear-gradient(90deg, var(--moss) 0%, var(--moss-deep) 100%); width: 0%; transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 3px; }
+
+  .voters {
+    font-size: 0.8rem; color: var(--ink-soft); font-style: italic;
+    margin-bottom: 1rem; min-height: 1.4rem;
+  }
+  .voters span {
+    display: inline-block; background: var(--sage-pale); color: var(--moss-deep);
+    padding: 0.15rem 0.6rem; border-radius: 999px; margin: 0.15rem 0.25rem 0.15rem 0;
+    font-size: 0.75rem; font-style: normal;
+  }
+  .voters .blurred {
+    display: inline-block; background: var(--bg-soft); color: transparent;
+    padding: 0.15rem 0.6rem; border-radius: 999px; margin: 0.15rem 0.25rem 0.15rem 0;
+    font-size: 0.75rem; font-style: normal;
+    background-image: linear-gradient(90deg, var(--bg-soft) 0%, var(--sage-pale) 50%, var(--bg-soft) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s ease-in-out infinite;
+    user-select: none;
+  }
+  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+  .vote-btn {
+    width: 100%; background: var(--paper); border: 1.5px solid var(--moss);
+    color: var(--moss-deep); padding: 0.85rem 1rem; font-family: 'Inter', sans-serif;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.2em;
+    cursor: pointer; transition: all 0.3s ease; font-weight: 500;
+  }
+  .vote-btn:hover:not(.is-voted):not(:disabled) { background: var(--moss-deep); color: var(--paper); }
+  .vote-btn.is-voted { background: var(--moss-deep); color: var(--paper); cursor: default; }
+
+  /* VOTE MODAL */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(44, 53, 40, 0.6);
+    display: none; align-items: center; justify-content: center;
+    padding: 2rem; z-index: 100; backdrop-filter: blur(6px);
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--paper); padding: 2.5rem 2rem;
+    max-width: 480px; width: 100%; border: 1px solid var(--line);
+    box-shadow: var(--shadow); position: relative;
+  }
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 400;
+    font-size: 1.8rem; margin-bottom: 0.3rem; color: var(--ink);
+  }
+  .modal h3 em { font-style: italic; color: var(--moss-deep); }
+  .modal .modal-sub {
+    font-family: 'Caveat', cursive; font-size: 1.2rem;
+    color: var(--moss); margin-bottom: 1.5rem;
+  }
+  .modal label {
+    display: block; font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.2em; color: var(--ink-soft); margin-bottom: 0.4rem;
+    margin-top: 1rem;
+  }
+  .modal input, .modal textarea {
+    width: 100%; padding: 0.8rem 1rem; border: 1px solid var(--line);
+    background: var(--bg); font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--ink); outline: none;
+    transition: border-color 0.3s ease; resize: vertical;
+  }
+  .modal input:focus, .modal textarea:focus { border-color: var(--moss); }
+  .modal textarea { min-height: 80px; font-size: 1rem; }
+  .modal-actions {
+    display: flex; gap: 0.75rem; margin-top: 1.5rem;
+  }
+  .modal button {
+    flex: 1; padding: 0.85rem 1.2rem; font-family: 'Inter', sans-serif;
+    font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.2em;
+    cursor: pointer; border: none; transition: all 0.3s ease; font-weight: 500;
+  }
+  .modal button.primary { background: var(--moss-deep); color: var(--paper); }
+  .modal button.primary:hover { background: var(--moss); }
+  .modal button.primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal button.secondary {
+    background: transparent; color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .modal button.secondary:hover { background: var(--bg-soft); }
+  .modal-close {
+    position: absolute; top: 0.8rem; right: 1rem; background: none; border: none;
+    font-size: 1.5rem; color: var(--ink-soft); cursor: pointer; padding: 0.3rem 0.6rem;
+  }
+  .modal-summary {
+    background: var(--bg-soft); padding: 1rem 1.2rem; margin-bottom: 0.5rem;
+    border-left: 3px solid var(--moss);
+  }
+  .modal-summary strong {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 1.3rem; color: var(--moss-deep); font-weight: 500;
+  }
+  .modal-summary span {
+    display: block; font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.2rem;
+  }
+
+  /* COMMENTS SECTION */
+  .comments {
+    max-width: 800px; margin: 1rem auto 4rem; padding: 0 1rem;
+  }
+  .comments h2 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: 2rem; text-align: center; margin-bottom: 0.3rem;
+  }
+  .comments h2 em { font-style: italic; color: var(--moss-deep); }
+  .comments-sub { text-align: center; font-family: 'Caveat', cursive; font-size: 1.2rem; color: var(--moss); margin-bottom: 2rem; }
+
+  .comment {
+    background: var(--paper); padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+    border-left: 3px solid var(--sage); position: relative;
+  }
+  .comment-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+  .comment-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--ink); font-weight: 500; }
+  .comment-dress { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss); background: var(--sage-pale); padding: 0.2rem 0.6rem; border-radius: 999px; }
+  .comment-body { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--ink-soft); line-height: 1.5; font-style: italic; }
+
+  /* ADMIN */
+  .admin { text-align: center; padding: 2rem 0 4rem; border-top: 1px solid var(--line); margin-top: 3rem; }
+  .admin button {
+    background: transparent; border: 1px dashed var(--ink-soft); color: var(--ink-soft);
+    padding: 0.6rem 1.5rem; font-family: 'Inter', sans-serif; font-size: 0.7rem;
+    text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer;
+    margin: 0 0.5rem 0.5rem; transition: all 0.3s ease;
+  }
+  .admin button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color: var(--paper); padding: 0.8rem 1.5rem;
+    border-radius: 4px; font-size: 0.85rem; z-index: 200;
+    opacity: 0; transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+  .toast.error { background: var(--rust); }
+
+  footer { text-align: center; padding: 2rem 1rem 3rem; color: var(--ink-soft); }
+  footer p { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; }
+
+  .loading { text-align: center; padding: 4rem 2rem; font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--ink-soft); }
+
+  @keyframes float-up { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-200px) rotate(360deg); opacity: 0; } }
+  .confetti { position: fixed; pointer-events: none; z-index: 200; animation: float-up 1.5s ease-out forwards; }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="hero">
+    <p class="hero-mark">~ help us choose ~</p>
+    <h1 class="hero-title">The <em>Final</em><br>Three.</h1>
+    <div class="hero-divider">
+      <span class="line"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C 10 6, 8 8, 4 9 C 8 10, 10 12, 12 16 C 14 12, 16 10, 20 9 C 16 8, 14 6, 12 2 Z"/></svg>
+      <span class="line"></span>
+    </div>
+    <p class="hero-blurb">We've narrowed it down to three flower-girl dresses for our 2½-year-old. She'll be wearing white Converse with whichever wins. Cast your vote — and you'll see who else voted for what.</p>
+    <div class="vote-status" id="voteStatus">
+      <span class="dot"></span>
+      <span id="totalVotesText">Loading…</span>
+    </div>
+  </header>
+
+  <div class="privacy-notice" id="privacyNotice">
+    <strong>~ private until you vote ~</strong>
+    Vote counts are visible, but to keep things honest you'll only see <em>who</em> voted for what (and any comments) once you've cast your own vote.
+  </div>
+
+  <main class="dresses" id="dresses">
+    <div class="loading" style="grid-column: 1/-1;">~ gathering the dresses ~</div>
+  </main>
+
+  <section class="comments hidden" id="commentsSection">
+    <h2>The <em>peanut gallery</em></h2>
+    <p class="comments-sub">~ thoughts from the voters ~</p>
+    <div id="commentsList"></div>
+  </section>
+
+  <div class="admin">
+    <button onclick="changeMyVote()" id="changeBtn" class="hidden">Change my vote</button>
+    <button onclick="copyShareLink()" id="shareBtn">Copy share link</button>
+  </div>
+
+  <footer><p>~ all votes welcome, even controversial ones ~</p></footer>
+
+</div>
+
+<!-- VOTE MODAL -->
+<div class="modal-backdrop" id="voteModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    <h3>Voting for <em id="modalDressLetter">A</em></h3>
+    <p class="modal-sub" id="modalSub">~ a fine choice ~</p>
+
+    <div class="modal-summary">
+      <strong id="modalDressName">Dress name</strong>
+      <span id="modalDressDetail">Retailer · price</span>
+    </div>
+
+    <label for="modalName">Your name</label>
+    <input type="text" id="modalName" placeholder="e.g. Aunt Jess" maxlength="40" autocomplete="given-name">
+
+    <label for="modalComment">Optional thoughts (visible after you vote)</label>
+    <textarea id="modalComment" placeholder="Anything you want to add — strong opinions welcome." maxlength="500"></textarea>
+
+    <div class="modal-actions">
+      <button class="secondary" onclick="closeModal()">Cancel</button>
+      <button class="primary" id="modalSubmit" onclick="submitVote()">Submit vote</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DRESSES = [
+  {
+    id: 'azazie', letter: 'A',
+    retailer: 'Azazie',
+    name: 'Bean Pistachio Ball-Gown Tulle Dress',
+    price: '£53.10',
+    priceNote: '(was £59)',
+    notes: 'Classic flower-girl ball gown in soft pistachio tulle. Knee-length and sensible for a toddler. Made-to-order — allow 3 weeks for delivery.',
+    img: 'https://cdn-1.azazie.com/upimg/h65/b2/2c/a4d508bf3b07da93e56786ecabd8b22c.jpg.webp',
+    imgFallback: 'Pistachio tulle ball gown — sleeveless, knee-length, classic flower-girl shape',
+    link: 'https://www.azazie.com/gb/products/azazie-bean-pistachio-ball-gown-sleeveless-tulle-knee-length-flower-girl-dress/75364405'
+  },
+  {
+    id: 'etsy', letter: 'B',
+    retailer: 'Etsy · Handmade',
+    name: 'Sage Tulle V-Back Dress with Pearl Detail',
+    price: '~£60–80',
+    priceNote: '(varies by size)',
+    notes: 'Handmade. Sage satin bodice with detachable bow, four layers of sage tulle topped with ivory tulle and sewn-in pearls. Open V-back. The most "fairy princess" of the three.',
+    img: '',
+    imgFallback: 'Sage tulle V-back dress — pearl-detailed ivory overlay, detachable bow, knee-length',
+    link: 'https://www.etsy.com/uk/listing/1898153313/knee-length-sage-green-tulle-elegant-v'
+  },
+  {
+    id: 'vinted', letter: 'C',
+    retailer: 'Vinted · Pre-loved',
+    name: 'Bellas Baby Boutique Fairy Butterfly Dress',
+    price: '£15.00',
+    priceNote: '(+ ~£1.75 P&P)',
+    notes: 'Pre-loved (BNWT — brand new with tags), described as "very good" condition. Fairy / butterfly themed in green, size 24-36 months. The wildcard — and easily the cheapest.',
+    img: 'https://images1.vinted.net/t/04_01612_Dxx8RrpTu8M6WmM4w3mCmWCm/f800/1776341878.webp?s=a181ccb3dddc17161e3070d86b17e2e6dd6db88b',
+    imgFallback: 'Fairy / butterfly themed party dress in green, size 2-3 years',
+    link: 'https://www.vinted.co.uk/items/8667618485-2-3-years-birthday-party-dress-fairy-butterfly-pretty-dress'
+  }
+];
+const DRESS_BY_ID = Object.fromEntries(DRESSES.map(d => [d.id, d]));
+
+let state = {
+  hasVoted: false,
+  counts: { azazie: 0, etsy: 0, vinted: 0 },
+  total: 0,
+  voters: { azazie: [], etsy: [], vinted: [] },
+  comments: [],
+  me: null,
+};
+let pendingDressId = null;
+
+const API = '/api/votes';
+
+async function loadVotes() {
+  try {
+    const res = await fetch(API, { credentials: 'same-origin' });
+    if (!res.ok) throw new Error('API error ' + res.status);
+    const data = await res.json();
+    state = {
+      hasVoted: !!data.hasVoted,
+      counts: data.counts || { azazie: 0, etsy: 0, vinted: 0 },
+      total: data.total || 0,
+      voters: data.voters || { azazie: [], etsy: [], vinted: [] },
+      comments: data.comments || [],
+      me: data.me || null,
+    };
+  } catch (err) {
+    toast('Could not load votes — try refreshing', true);
+    console.error(err);
+  }
+}
+
+async function postVote(payload) {
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Vote failed');
+    }
+    return true;
+  } catch (err) {
+    toast(err.message || 'Vote failed', true);
+    return false;
+  }
+}
+
+function leader() {
+  let best = null, bestN = 0, ties = 0;
+  for (const [id, n] of Object.entries(state.counts)) {
+    if (n > bestN) { best = id; bestN = n; ties = 1; }
+    else if (n === bestN) { ties++; }
+  }
+  if (bestN === 0 || ties > 1 || state.total < 2) return null;
+  return best;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function render() {
+  const total = state.total;
+  const lead = leader();
+
+  // Status pill
+  const statusEl = document.getElementById('voteStatus');
+  const totalText = document.getElementById('totalVotesText');
+  if (state.hasVoted) {
+    totalText.textContent = total === 1 ? '1 vote · names revealed' : `${total} votes · names revealed`;
+    statusEl.classList.remove('private');
+  } else {
+    totalText.textContent = total === 0 ? 'No votes yet — be the first'
+      : total === 1 ? '1 vote · names hidden' : `${total} votes · names hidden`;
+    statusEl.classList.add('private');
+  }
+
+  // Privacy notice
+  document.getElementById('privacyNotice').classList.toggle('hidden', state.hasVoted);
+
+  // Change-vote button
+  document.getElementById('changeBtn').classList.toggle('hidden', !state.hasVoted);
+
+  // Cards
+  const container = document.getElementById('dresses');
+  container.innerHTML = '';
+  for (const d of DRESSES) {
+    const count = state.counts[d.id] || 0;
+    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+    const isLeader = lead === d.id;
+    const isMine = state.me?.dress === d.id;
+
+    let votersHtml;
+    if (state.hasVoted) {
+      votersHtml = state.voters[d.id].length > 0
+        ? state.voters[d.id].map(n => `<span>${escapeHtml(n)}</span>`).join('')
+        : '<em style="opacity:0.55;">no votes yet</em>';
+    } else {
+      // Anonymised: show count of blurred chips matching the count
+      votersHtml = count > 0
+        ? Array(count).fill('<span class="blurred">someone</span>').join('')
+        : '<em style="opacity:0.55;">no votes yet</em>';
+    }
+
+    const btnLabel = isMine ? '✓ Your vote'
+      : state.hasVoted ? `Switch to ${d.letter}`
+      : `Vote for ${d.letter}`;
+
+    const imgBlock = d.img
+      ? `<div class="dress-img-wrap"><img src="${d.img}" alt="${escapeHtml(d.name)}" loading="lazy" onerror="this.parentElement.classList.add('no-img'); this.parentElement.textContent='${escapeHtml(d.imgFallback)}';"></div>`
+      : `<div class="dress-img-wrap no-img">${escapeHtml(d.imgFallback)}</div>`;
+
+    const card = document.createElement('article');
+    card.className = 'dress' + (isLeader ? ' is-leading' : '');
+    card.innerHTML = `
+      <span class="leading-tag">in the lead</span>
+      <span class="dress-letter">${d.letter}</span>
+      ${imgBlock}
+      <div class="dress-info">
+        <p class="dress-retailer">${escapeHtml(d.retailer)}</p>
+        <h3 class="dress-name">${escapeHtml(d.name)}</h3>
+        <p class="dress-price">${escapeHtml(d.price)} <span style="font-size:0.85rem;opacity:0.7;font-style:normal;">${escapeHtml(d.priceNote)}</span></p>
+        <p class="dress-notes">${escapeHtml(d.notes)}</p>
+        <a class="dress-link" href="${d.link}" target="_blank" rel="noopener">View listing →</a>
+        <div class="vote-section">
+          <div class="vote-meta">
+            <span class="vote-count">${count} <em>${count === 1 ? 'vote' : 'votes'}</em></span>
+            <span class="vote-percent">${pct}%</span>
+          </div>
+          <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+          <div class="voters">${votersHtml}</div>
+          <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  }
+
+  container.querySelectorAll('.vote-btn').forEach(btn => {
+    btn.addEventListener('click', () => openVoteModal(btn.dataset.dress));
+  });
+
+  // Comments
+  const commentsSection = document.getElementById('commentsSection');
+  const commentsList = document.getElementById('commentsList');
+  if (state.hasVoted && state.comments.length > 0) {
+    commentsSection.classList.remove('hidden');
+    commentsList.innerHTML = state.comments.map(c => `
+      <div class="comment">
+        <div class="comment-meta">
+          <span class="comment-name">${escapeHtml(c.name)}</span>
+          <span class="comment-dress">${escapeHtml(DRESS_BY_ID[c.dress]?.letter || '?')} · ${escapeHtml(DRESS_BY_ID[c.dress]?.retailer.split(' · ')[0] || '')}</span>
+        </div>
+        <div class="comment-body">"${escapeHtml(c.comment)}"</div>
+      </div>
+    `).join('');
+  } else {
+    commentsSection.classList.add('hidden');
+  }
+}
+
+function openVoteModal(dressId) {
+  pendingDressId = dressId;
+  const d = DRESS_BY_ID[dressId];
+  document.getElementById('modalDressLetter').textContent = d.letter;
+  document.getElementById('modalDressName').textContent = d.name;
+  document.getElementById('modalDressDetail').textContent = `${d.retailer} · ${d.price}`;
+  document.getElementById('modalSub').textContent = state.hasVoted ? '~ changing your mind ~' : '~ a fine choice ~';
+
+  // If they've already voted, prefill name/comment
+  if (state.me) {
+    document.getElementById('modalName').value = state.me.name || '';
+    document.getElementById('modalComment').value = state.me.comment || '';
+  }
+
+  document.getElementById('voteModal').classList.add('open');
+  setTimeout(() => document.getElementById('modalName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('voteModal').classList.remove('open');
+  pendingDressId = null;
+}
+
+async function submitVote() {
+  if (!pendingDressId) return;
+  const nameEl = document.getElementById('modalName');
+  const commentEl = document.getElementById('modalComment');
+  const name = nameEl.value.trim();
+  if (!name) {
+    nameEl.style.borderColor = 'var(--rust)';
+    nameEl.focus();
+    toast('A name, please — even just a first name', true);
+    return;
+  }
+
+  const submitBtn = document.getElementById('modalSubmit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Saving…';
+
+  const ok = await postVote({
+    name,
+    dress: pendingDressId,
+    comment: commentEl.value.trim(),
+  });
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Submit vote';
+
+  if (ok) {
+    closeModal();
+    burstConfetti();
+    await loadVotes();
+    render();
+    toast(state.hasVoted ? 'Vote updated 🌿' : 'Vote cast — names revealed!');
+  }
+}
+
+function changeMyVote() {
+  // Opens modal pre-pointed at the current vote so they can pick a different one
+  const currentDress = state.me?.dress;
+  if (currentDress) openVoteModal(currentDress);
+}
+
+function burstConfetti() {
+  const colors = ['#a8b598', '#6b7c5a', '#a86840', '#b89548', '#d4dcc4'];
+  for (let i = 0; i < 22; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.left = (50 + (Math.random() - 0.5) * 60) + '%';
+    el.style.top = '50%';
+    el.style.width = '8px';
+    el.style.height = '8px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.animationDelay = (Math.random() * 0.3) + 's';
+    el.style.transform = `translateX(${(Math.random() - 0.5) * 240}px)`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 2000);
+  }
+}
+
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.toggle('error', isError);
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function copyShareLink() {
+  const url = window.location.origin + window.location.pathname;
+  const btn = document.getElementById('shareBtn');
+  const original = btn.textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => { btn.textContent = original; }, 2000);
+    }).catch(() => prompt('Copy this link:', url));
+  } else {
+    prompt('Copy this link:', url);
+  }
+}
+
+// Close modal on backdrop click & Escape
+document.getElementById('voteModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+document.getElementById('modalName').addEventListener('input', (e) => {
+  e.target.style.borderColor = '';
+});
+
+async function init() {
+  await loadVotes();
+  render();
+  // Poll so other voters' counts (and reveals after you've voted) update live
+  setInterval(async () => {
+    await loadVotes();
+    render();
+  }, 8000);
+}
+
+init();
+</script>
+
+</body>
+</html>

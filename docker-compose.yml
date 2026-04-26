@@ -1,0 +1,18 @@
+services:
+  wedding-vote:
+    build: .
+    # After GitHub Actions builds & publishes, you can swap to:
+    # image: ghcr.io/spacetoast1738/wedding-vote:latest
+    container_name: wedding-vote
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist the SQLite DB on the Unraid host
+      - /mnt/user/appdata/wedding-vote:/data
+    environment:
+      - PORT=3000
+      # Optional: set this to enable the DELETE /api/votes admin endpoint
+      # - ADMIN_TOKEN=change-me-to-something-long-and-random
+    # If your Cloudflare Tunnel runs as a sibling container, drop the `ports:`
+    # block and have the tunnel hit http://wedding-vote:3000 instead.
