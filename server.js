@@ -4,8 +4,8 @@
 // Auth model:
 //   - Voter enters their name to vote
 //   - Browser cookie ties that name to the device (stops casual double-voting)
-//   - GET /api/votes returns name-stripped totals UNTIL the requester has voted
-//   - Once they've voted, the API returns full details (who voted for what + comments)
+//   - GET /api/votes returns only the total count publicly
+//   - Full results (counts per dress, voter names, comments) require the RESULTS_PASSWORD
 
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
@@ -22,6 +22,7 @@ const PORT = parseInt(process.env.PORT || '3000', 10);
 const HOST = process.env.HOST || '0.0.0.0';
 const DB_PATH = process.env.DB_PATH || '/data/votes.db';
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
+const RESULTS_PASSWORD = process.env.RESULTS_PASSWORD || '';
 const VALID_DRESSES = new Set(['azazie', 'etsy', 'vinted']);
 
 // ---------- database ----------
@@ -85,7 +86,7 @@ function ensureVoterId(req, reply) {
 
 // ---------- routes ----------
 
-// Returns either anonymised totals (if you haven't voted) or the full picture (if you have).
+// Returns only the total count publicly; full results require the RESULTS_PASSWORD query param.
 app.get('/api/votes', (req, reply) => {
   const voterId = ensureVoterId(req, reply);
   const rows = stmts.list.all();
@@ -98,18 +99,19 @@ app.get('/api/votes', (req, reply) => {
 
   const mine = stmts.byVoter.get(voterId);
 
-  if (!mine) {
-    // Anonymous: no names, no comments
+  const pw = req.query?.pw ?? '';
+  const resultsRevealed = RESULTS_PASSWORD !== '' && pw === RESULTS_PASSWORD;
+
+  if (!resultsRevealed) {
     return {
-      hasVoted: false,
-      counts,
+      hasVoted: !!mine,
       total,
-      voters: { azazie: [], etsy: [], vinted: [] },
-      comments: [],
+      resultsRevealed: false,
+      me: mine ? { name: mine.name, dress: mine.dress_id, comment: mine.comment || '' } : null,
     };
   }
 
-  // Voted: full reveal
+  // Password correct: full reveal
   const voters = { azazie: [], etsy: [], vinted: [] };
   const comments = [];
   for (const r of rows) {
@@ -118,12 +120,13 @@ app.get('/api/votes', (req, reply) => {
   }
 
   return {
-    hasVoted: true,
+    hasVoted: !!mine,
     counts,
     total,
     voters,
     comments,
-    me: { name: mine.name, dress: mine.dress_id, comment: mine.comment || '' },
+    resultsRevealed: true,
+    me: mine ? { name: mine.name, dress: mine.dress_id, comment: mine.comment || '' } : null,
   };
 });
 

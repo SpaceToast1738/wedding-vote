@@ -79,7 +79,6 @@
     width: 8px; height: 8px; background: var(--moss); border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
   }
-  .vote-status.private .dot { background: var(--bark); }
 
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
@@ -137,8 +136,7 @@
 
   .dress-info { padding: 1.8rem 1.6rem; flex: 1; display: flex; flex-direction: column; }
   .dress-retailer { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--moss); margin-bottom: 0.6rem; }
-  .dress-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; line-height: 1.2; margin-bottom: 0.6rem; font-weight: 400; }
-  .dress-price { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--moss-deep); margin-bottom: 1rem; font-weight: 500; }
+  .dress-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; line-height: 1.2; margin-bottom: 0.8rem; font-weight: 400; }
   .dress-notes { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1.2rem; flex: 1; }
   .dress-link {
     display: inline-block; font-size: 0.7rem; text-transform: uppercase;
@@ -165,16 +163,6 @@
     padding: 0.15rem 0.6rem; border-radius: 999px; margin: 0.15rem 0.25rem 0.15rem 0;
     font-size: 0.75rem; font-style: normal;
   }
-  .voters .blurred {
-    display: inline-block; background: var(--bg-soft); color: transparent;
-    padding: 0.15rem 0.6rem; border-radius: 999px; margin: 0.15rem 0.25rem 0.15rem 0;
-    font-size: 0.75rem; font-style: normal;
-    background-image: linear-gradient(90deg, var(--bg-soft) 0%, var(--sage-pale) 50%, var(--bg-soft) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 2.5s ease-in-out infinite;
-    user-select: none;
-  }
-  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 
   .vote-btn {
     width: 100%; background: var(--paper); border: 1.5px solid var(--moss);
@@ -253,7 +241,7 @@
 
   /* COMMENTS SECTION */
   .comments {
-    max-width: 800px; margin: 1rem auto 4rem; padding: 0 1rem;
+    max-width: 800px; margin: 1rem auto 2rem; padding: 0 1rem;
   }
   .comments h2 {
     font-family: 'Cormorant Garamond', serif; font-weight: 300;
@@ -270,6 +258,41 @@
   .comment-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--ink); font-weight: 500; }
   .comment-dress { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--moss); background: var(--sage-pale); padding: 0.2rem 0.6rem; border-radius: 999px; }
   .comment-body { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--ink-soft); line-height: 1.5; font-style: italic; }
+
+  /* RESULTS GATE */
+  .results-gate {
+    max-width: 640px; margin: 0 auto 4rem; padding: 0 1rem; text-align: center;
+  }
+  .results-gate h2 {
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    font-size: 2rem; margin-bottom: 0.3rem;
+  }
+  .results-gate h2 em { font-style: italic; color: var(--moss-deep); }
+  .results-gate-form {
+    display: flex; gap: 0.75rem; margin-top: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto;
+  }
+  .results-gate-form input {
+    flex: 1; padding: 0.8rem 1rem; border: 1px solid var(--line);
+    background: var(--bg); font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--ink); outline: none;
+    transition: border-color 0.3s ease;
+  }
+  .results-gate-form input:focus { border-color: var(--moss); }
+  .results-gate-form button {
+    padding: 0.8rem 1.4rem; background: var(--moss-deep); color: var(--paper);
+    border: none; font-family: 'Inter', sans-serif; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.2em; cursor: pointer;
+    transition: background 0.3s ease; font-weight: 500; white-space: nowrap;
+  }
+  .results-gate-form button:hover { background: var(--moss); }
+  .results-gate-error {
+    font-size: 0.85rem; color: var(--rust); margin-top: 0.75rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .results-unlocked {
+    font-family: 'Caveat', cursive; font-size: 1.3rem; color: var(--moss);
+    margin-top: 1rem;
+  }
 
   /* ADMIN */
   .admin { text-align: center; padding: 2rem 0 4rem; border-top: 1px solid var(--line); margin-top: 3rem; }
@@ -314,7 +337,7 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C 10 6, 8 8, 4 9 C 8 10, 10 12, 12 16 C 14 12, 16 10, 20 9 C 16 8, 14 6, 12 2 Z"/></svg>
       <span class="line"></span>
     </div>
-    <p class="hero-blurb">We've narrowed it down to three flower-girl dresses for our 2½-year-old. She'll be wearing white Converse with whichever wins. Cast your vote — and you'll see who else voted for what.</p>
+    <p class="hero-blurb">We've narrowed it down to three flower-girl dresses. She'll be wearing white Converse with whichever wins. Cast your vote — then use the results password at the bottom to see the full breakdown.</p>
     <div class="vote-status" id="voteStatus">
       <span class="dot"></span>
       <span id="totalVotesText">Loading…</span>
@@ -322,8 +345,8 @@
   </header>
 
   <div class="privacy-notice" id="privacyNotice">
-    <strong>~ private until you vote ~</strong>
-    Vote counts are visible, but to keep things honest you'll only see <em>who</em> voted for what (and any comments) once you've cast your own vote.
+    <strong>~ results are locked ~</strong>
+    Vote counts are hidden until the results password is entered — so everyone votes without being influenced.
   </div>
 
   <main class="dresses" id="dresses">
@@ -336,9 +359,19 @@
     <div id="commentsList"></div>
   </section>
 
+  <section class="results-gate" id="resultsGate">
+    <h2>View <em>results</em></h2>
+    <p class="comments-sub">~ enter the password to see who voted for what ~</p>
+    <div class="results-gate-form" id="resultsGateForm">
+      <input type="password" id="resultsPwInput" placeholder="Results password" onkeydown="if(event.key==='Enter')submitResultsPw()">
+      <button onclick="submitResultsPw()">See results</button>
+    </div>
+    <p class="results-gate-error hidden" id="resultsPwError">Incorrect password — try again</p>
+    <p class="results-unlocked hidden" id="resultsUnlocked">✓ Results unlocked</p>
+  </section>
+
   <div class="admin">
     <button onclick="changeMyVote()" id="changeBtn" class="hidden">Change my vote</button>
-    <button onclick="copyShareLink()" id="shareBtn">Copy share link</button>
   </div>
 
   <footer><p>~ all votes welcome, even controversial ones ~</p></footer>
@@ -354,13 +387,13 @@
 
     <div class="modal-summary">
       <strong id="modalDressName">Dress name</strong>
-      <span id="modalDressDetail">Retailer · price</span>
+      <span id="modalDressDetail">Retailer</span>
     </div>
 
     <label for="modalName">Your name</label>
     <input type="text" id="modalName" placeholder="e.g. Aunt Jess" maxlength="40" autocomplete="given-name">
 
-    <label for="modalComment">Optional thoughts (visible after you vote)</label>
+    <label for="modalComment">Optional thoughts (visible in results)</label>
     <textarea id="modalComment" placeholder="Anything you want to add — strong opinions welcome." maxlength="500"></textarea>
 
     <div class="modal-actions">
@@ -378,8 +411,6 @@ const DRESSES = [
     id: 'azazie', letter: 'A',
     retailer: 'Azazie',
     name: 'Bean Pistachio Ball-Gown Tulle Dress',
-    price: '£53.10',
-    priceNote: '(was £59)',
     notes: 'Classic flower-girl ball gown in soft pistachio tulle. Knee-length and sensible for a toddler. Made-to-order — allow 3 weeks for delivery.',
     img: 'https://cdn-1.azazie.com/upimg/h65/b2/2c/a4d508bf3b07da93e56786ecabd8b22c.jpg.webp',
     imgFallback: 'Pistachio tulle ball gown — sleeveless, knee-length, classic flower-girl shape',
@@ -389,10 +420,8 @@ const DRESSES = [
     id: 'etsy', letter: 'B',
     retailer: 'Etsy · Handmade',
     name: 'Sage Tulle V-Back Dress with Pearl Detail',
-    price: '~£60–80',
-    priceNote: '(varies by size)',
     notes: 'Handmade. Sage satin bodice with detachable bow, four layers of sage tulle topped with ivory tulle and sewn-in pearls. Open V-back. The most "fairy princess" of the three.',
-    img: '',
+    img: 'https://i.etsystatic.com/29162146/r/il/b7e037/6766753714/il_1080xN.6766753714_j6c0.jpg',
     imgFallback: 'Sage tulle V-back dress — pearl-detailed ivory overlay, detachable bow, knee-length',
     link: 'https://www.etsy.com/uk/listing/1898153313/knee-length-sage-green-tulle-elegant-v'
   },
@@ -400,9 +429,7 @@ const DRESSES = [
     id: 'vinted', letter: 'C',
     retailer: 'Vinted · Pre-loved',
     name: 'Bellas Baby Boutique Fairy Butterfly Dress',
-    price: '£15.00',
-    priceNote: '(+ ~£1.75 P&P)',
-    notes: 'Pre-loved (BNWT — brand new with tags), described as "very good" condition. Fairy / butterfly themed in green, size 24-36 months. The wildcard — and easily the cheapest.',
+    notes: 'Pre-loved (BNWT — brand new with tags), described as "very good" condition. Fairy / butterfly themed in green, size 24-36 months.',
     img: 'https://images1.vinted.net/t/04_01612_Dxx8RrpTu8M6WmM4w3mCmWCm/f800/1776341878.webp?s=a181ccb3dddc17161e3070d86b17e2e6dd6db88b',
     imgFallback: 'Fairy / butterfly themed party dress in green, size 2-3 years',
     link: 'https://www.vinted.co.uk/items/8667618485-2-3-years-birthday-party-dress-fairy-butterfly-pretty-dress'
@@ -412,6 +439,7 @@ const DRESS_BY_ID = Object.fromEntries(DRESSES.map(d => [d.id, d]));
 
 let state = {
   hasVoted: false,
+  resultsRevealed: false,
   counts: { azazie: 0, etsy: 0, vinted: 0 },
   total: 0,
   voters: { azazie: [], etsy: [], vinted: [] },
@@ -424,11 +452,14 @@ const API = '/api/votes';
 
 async function loadVotes() {
   try {
-    const res = await fetch(API, { credentials: 'same-origin' });
+    const pw = sessionStorage.getItem('resultsPw') || '';
+    const url = pw ? `${API}?pw=${encodeURIComponent(pw)}` : API;
+    const res = await fetch(url, { credentials: 'same-origin' });
     if (!res.ok) throw new Error('API error ' + res.status);
     const data = await res.json();
     state = {
       hasVoted: !!data.hasVoted,
+      resultsRevealed: !!data.resultsRevealed,
       counts: data.counts || { azazie: 0, etsy: 0, vinted: 0 },
       total: data.total || 0,
       voters: data.voters || { azazie: [], etsy: [], vinted: [] },
@@ -461,6 +492,7 @@ async function postVote(payload) {
 }
 
 function leader() {
+  if (!state.resultsRevealed) return null;
   let best = null, bestN = 0, ties = 0;
   for (const [id, n] of Object.entries(state.counts)) {
     if (n > bestN) { best = id; bestN = n; ties = 1; }
@@ -478,20 +510,13 @@ function render() {
   const total = state.total;
   const lead = leader();
 
-  // Status pill
-  const statusEl = document.getElementById('voteStatus');
+  // Status pill — always just the total
   const totalText = document.getElementById('totalVotesText');
-  if (state.hasVoted) {
-    totalText.textContent = total === 1 ? '1 vote · names revealed' : `${total} votes · names revealed`;
-    statusEl.classList.remove('private');
-  } else {
-    totalText.textContent = total === 0 ? 'No votes yet — be the first'
-      : total === 1 ? '1 vote · names hidden' : `${total} votes · names hidden`;
-    statusEl.classList.add('private');
-  }
+  totalText.textContent = total === 0 ? 'No votes yet — be the first'
+    : total === 1 ? '1 vote cast' : `${total} votes cast`;
 
-  // Privacy notice
-  document.getElementById('privacyNotice').classList.toggle('hidden', state.hasVoted);
+  // Privacy notice — hide once results are revealed
+  document.getElementById('privacyNotice').classList.toggle('hidden', state.resultsRevealed);
 
   // Change-vote button
   document.getElementById('changeBtn').classList.toggle('hidden', !state.hasVoted);
@@ -505,18 +530,6 @@ function render() {
     const isLeader = lead === d.id;
     const isMine = state.me?.dress === d.id;
 
-    let votersHtml;
-    if (state.hasVoted) {
-      votersHtml = state.voters[d.id].length > 0
-        ? state.voters[d.id].map(n => `<span>${escapeHtml(n)}</span>`).join('')
-        : '<em style="opacity:0.55;">no votes yet</em>';
-    } else {
-      // Anonymised: show count of blurred chips matching the count
-      votersHtml = count > 0
-        ? Array(count).fill('<span class="blurred">someone</span>').join('')
-        : '<em style="opacity:0.55;">no votes yet</em>';
-    }
-
     const btnLabel = isMine ? '✓ Your vote'
       : state.hasVoted ? `Switch to ${d.letter}`
       : `Vote for ${d.letter}`;
@@ -524,6 +537,24 @@ function render() {
     const imgBlock = d.img
       ? `<div class="dress-img-wrap"><img src="${d.img}" alt="${escapeHtml(d.name)}" loading="lazy" onerror="this.parentElement.classList.add('no-img'); this.parentElement.textContent='${escapeHtml(d.imgFallback)}';"></div>`
       : `<div class="dress-img-wrap no-img">${escapeHtml(d.imgFallback)}</div>`;
+
+    const voteSection = state.resultsRevealed ? `
+        <div class="vote-section">
+          <div class="vote-meta">
+            <span class="vote-count">${count} <em>${count === 1 ? 'vote' : 'votes'}</em></span>
+            <span class="vote-percent">${pct}%</span>
+          </div>
+          <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
+          <div class="voters">${
+            state.voters[d.id].length > 0
+              ? state.voters[d.id].map(n => `<span>${escapeHtml(n)}</span>`).join('')
+              : '<em style="opacity:0.55;">no votes yet</em>'
+          }</div>
+          <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
+        </div>` : `
+        <div class="vote-section">
+          <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
+        </div>`;
 
     const card = document.createElement('article');
     card.className = 'dress' + (isLeader ? ' is-leading' : '');
@@ -534,18 +565,9 @@ function render() {
       <div class="dress-info">
         <p class="dress-retailer">${escapeHtml(d.retailer)}</p>
         <h3 class="dress-name">${escapeHtml(d.name)}</h3>
-        <p class="dress-price">${escapeHtml(d.price)} <span style="font-size:0.85rem;opacity:0.7;font-style:normal;">${escapeHtml(d.priceNote)}</span></p>
         <p class="dress-notes">${escapeHtml(d.notes)}</p>
         <a class="dress-link" href="${d.link}" target="_blank" rel="noopener">View listing →</a>
-        <div class="vote-section">
-          <div class="vote-meta">
-            <span class="vote-count">${count} <em>${count === 1 ? 'vote' : 'votes'}</em></span>
-            <span class="vote-percent">${pct}%</span>
-          </div>
-          <div class="vote-bar"><div class="vote-bar-fill" style="width:${pct}%"></div></div>
-          <div class="voters">${votersHtml}</div>
-          <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
-        </div>
+        ${voteSection}
       </div>
     `;
     container.appendChild(card);
@@ -555,10 +577,10 @@ function render() {
     btn.addEventListener('click', () => openVoteModal(btn.dataset.dress));
   });
 
-  // Comments
+  // Comments — only shown when results are revealed
   const commentsSection = document.getElementById('commentsSection');
   const commentsList = document.getElementById('commentsList');
-  if (state.hasVoted && state.comments.length > 0) {
+  if (state.resultsRevealed && state.comments.length > 0) {
     commentsSection.classList.remove('hidden');
     commentsList.innerHTML = state.comments.map(c => `
       <div class="comment">
@@ -572,6 +594,11 @@ function render() {
   } else {
     commentsSection.classList.add('hidden');
   }
+
+  // Results gate
+  document.getElementById('resultsGateForm').classList.toggle('hidden', state.resultsRevealed);
+  document.getElementById('resultsPwError').classList.add('hidden');
+  document.getElementById('resultsUnlocked').classList.toggle('hidden', !state.resultsRevealed);
 }
 
 function openVoteModal(dressId) {
@@ -579,10 +606,9 @@ function openVoteModal(dressId) {
   const d = DRESS_BY_ID[dressId];
   document.getElementById('modalDressLetter').textContent = d.letter;
   document.getElementById('modalDressName').textContent = d.name;
-  document.getElementById('modalDressDetail').textContent = `${d.retailer} · ${d.price}`;
+  document.getElementById('modalDressDetail').textContent = d.retailer;
   document.getElementById('modalSub').textContent = state.hasVoted ? '~ changing your mind ~' : '~ a fine choice ~';
 
-  // If they've already voted, prefill name/comment
   if (state.me) {
     document.getElementById('modalName').value = state.me.name || '';
     document.getElementById('modalComment').value = state.me.comment || '';
@@ -627,14 +653,25 @@ async function submitVote() {
     burstConfetti();
     await loadVotes();
     render();
-    toast(state.hasVoted ? 'Vote updated 🌿' : 'Vote cast — names revealed!');
+    toast('Vote cast! 🌿');
   }
 }
 
 function changeMyVote() {
-  // Opens modal pre-pointed at the current vote so they can pick a different one
   const currentDress = state.me?.dress;
   if (currentDress) openVoteModal(currentDress);
+}
+
+async function submitResultsPw() {
+  const pw = document.getElementById('resultsPwInput').value;
+  if (!pw) return;
+  sessionStorage.setItem('resultsPw', pw);
+  await loadVotes();
+  render();
+  if (!state.resultsRevealed) {
+    document.getElementById('resultsPwError').classList.remove('hidden');
+    sessionStorage.removeItem('resultsPw');
+  }
 }
 
 function burstConfetti() {
@@ -664,20 +701,6 @@ function toast(msg, isError = false) {
   toast._t = setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-function copyShareLink() {
-  const url = window.location.origin + window.location.pathname;
-  const btn = document.getElementById('shareBtn');
-  const original = btn.textContent;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => {
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => { btn.textContent = original; }, 2000);
-    }).catch(() => prompt('Copy this link:', url));
-  } else {
-    prompt('Copy this link:', url);
-  }
-}
-
 // Close modal on backdrop click & Escape
 document.getElementById('voteModal').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) closeModal();
@@ -692,7 +715,6 @@ document.getElementById('modalName').addEventListener('input', (e) => {
 async function init() {
   await loadVotes();
   render();
-  // Poll so other voters' counts (and reveals after you've voted) update live
   setInterval(async () => {
     await loadVotes();
     render();
