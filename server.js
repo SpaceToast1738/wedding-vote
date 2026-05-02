@@ -23,7 +23,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 const DB_PATH = process.env.DB_PATH || '/data/votes.db';
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
 const RESULTS_PASSWORD = process.env.RESULTS_PASSWORD || '';
-const VALID_DRESSES = new Set(['azazie', 'etsy', 'vinted']);
+const VALID_DRESSES = new Set(['azazie', 'vinted']); // 'etsy' eliminated after round one draw
 
 // ---------- database ----------
 const db = new Database(DB_PATH);
@@ -91,11 +91,11 @@ app.get('/api/votes', (req, reply) => {
   const voterId = ensureVoterId(req, reply);
   const rows = stmts.list.all();
 
-  const counts = { azazie: 0, etsy: 0, vinted: 0 };
+  const counts = { azazie: 0, vinted: 0 };
   for (const r of rows) {
     if (counts.hasOwnProperty(r.dress_id)) counts[r.dress_id]++;
   }
-  const total = counts.azazie + counts.etsy + counts.vinted;
+  const total = counts.azazie + counts.vinted;
 
   const mine = stmts.byVoter.get(voterId);
 
@@ -112,7 +112,7 @@ app.get('/api/votes', (req, reply) => {
   }
 
   // Password correct: full reveal
-  const voters = { azazie: [], etsy: [], vinted: [] };
+  const voters = { azazie: [], vinted: [] };
   const comments = [];
   for (const r of rows) {
     if (voters[r.dress_id]) voters[r.dress_id].push(r.name);
