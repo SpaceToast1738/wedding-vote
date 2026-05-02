@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Final Three — Cast Your Vote</title>
+<title>The Final Two — Cast Your Vote</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet">
@@ -95,6 +95,19 @@
     display: block; margin-bottom: 0.3rem; font-weight: 500;
   }
 
+  /* REVOTE NOTICE */
+  .revote-notice {
+    max-width: 640px; margin: 0 auto 2.5rem; padding: 1.4rem 1.6rem;
+    background: var(--paper); border-left: 3px solid var(--gold);
+    font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-style: italic;
+    color: var(--ink-soft); line-height: 1.6;
+  }
+  .revote-notice strong {
+    font-style: normal; font-family: 'Inter', sans-serif; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold);
+    display: block; margin-bottom: 0.4rem; font-weight: 500;
+  }
+
   /* DRESS GRID */
   .dresses { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; padding: 1rem 0 4rem; }
 
@@ -106,6 +119,8 @@
   }
   .dress:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
   .dress.is-leading { border-color: var(--rust); border-width: 2px; }
+  .dress.is-eliminated { opacity: 0.5; pointer-events: none; }
+  .dress.is-eliminated .dress-img-wrap img { filter: grayscale(100%); }
 
   .leading-tag {
     position: absolute; top: 1rem; right: 1rem; z-index: 3;
@@ -114,6 +129,13 @@
     padding: 0.3rem 1rem; transform: rotate(3deg); display: none;
   }
   .dress.is-leading .leading-tag { display: block; }
+
+  .eliminated-tag {
+    position: absolute; top: 1rem; right: 1rem; z-index: 3;
+    background: var(--ink-soft); color: var(--paper);
+    font-family: 'Caveat', cursive; font-size: 1.05rem;
+    padding: 0.3rem 1rem; transform: rotate(-2deg);
+  }
 
   .dress-letter {
     position: absolute; top: 1rem; left: 1rem; z-index: 2;
@@ -337,6 +359,8 @@
 
     .dress-info { padding: 1.2rem 1rem; }
 
+    .revote-notice { padding: 1rem; font-size: 1rem; margin-bottom: 1.5rem; }
+
     /* Results gate: stack input + button vertically */
     .results-gate { margin-bottom: 2.5rem; }
     .results-gate-form {
@@ -368,20 +392,25 @@
 
   <header class="hero">
     <p class="hero-mark">~ help us choose ~</p>
-    <h1 class="hero-title">The <em>Final</em><br>Three.</h1>
+    <h1 class="hero-title">The <em>Final</em><br>Two.</h1>
     <div class="hero-divider">
       <span class="line"></span>
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2 C 10 6, 8 8, 4 9 C 8 10, 10 12, 12 16 C 14 12, 16 10, 20 9 C 16 8, 14 6, 12 2 Z"/></svg>
       <span class="line"></span>
     </div>
-    <p class="hero-blurb">We've narrowed it down to three flower-girl dresses. She'll be wearing white Converse with whichever wins. Cast your vote — then use the results password at the bottom to see the full breakdown.</p>
+    <p class="hero-blurb">Round one ended in a draw. Dress B has been eliminated — please cast your vote again for your favourite of the final two.</p>
     <div class="vote-status" id="voteStatus">
       <span class="dot"></span>
       <span id="totalVotesText">Loading…</span>
     </div>
   </header>
 
-  <div class="privacy-notice" id="privacyNotice">
+  <div class="revote-notice">
+    <strong>~ it's a draw — round two ~</strong>
+    Round one ended in a tie between Dress A and Dress C. Dress B has been eliminated. Please cast your vote for your favourite of the remaining two — all previous votes have been cleared for a fresh count.
+  </div>
+
+  <div class="privacy-notice hidden" id="privacyNotice">
     <strong>~ results are locked ~</strong>
     Vote counts are hidden until the results password is entered — so everyone votes without being influenced.
   </div>
@@ -460,7 +489,8 @@ const DRESSES = [
     notes: 'Handmade. Sage satin bodice with detachable bow, four layers of sage tulle topped with ivory tulle and sewn-in pearls. Open V-back. The most "fairy princess" of the three.',
     img: 'https://i.etsystatic.com/29162146/r/il/b7e037/6766753714/il_1080xN.6766753714_j6c0.jpg',
     imgFallback: 'Sage tulle V-back dress — pearl-detailed ivory overlay, detachable bow, knee-length',
-    link: 'https://www.etsy.com/uk/listing/1898153313/knee-length-sage-green-tulle-elegant-v'
+    link: 'https://www.etsy.com/uk/listing/1898153313/knee-length-sage-green-tulle-elegant-v',
+    eliminated: true,
   },
   {
     id: 'vinted', letter: 'C',
@@ -567,15 +597,16 @@ function render() {
     const isLeader = lead === d.id;
     const isMine = state.me?.dress === d.id;
 
-    const btnLabel = isMine ? '✓ Your vote'
-      : state.hasVoted ? `Switch to ${d.letter}`
-      : `Vote for ${d.letter}`;
-
     const imgBlock = d.img
       ? `<div class="dress-img-wrap"><img src="${d.img}" alt="${escapeHtml(d.name)}" loading="lazy" onerror="this.parentElement.classList.add('no-img'); this.parentElement.textContent='${escapeHtml(d.imgFallback)}';"></div>`
       : `<div class="dress-img-wrap no-img">${escapeHtml(d.imgFallback)}</div>`;
 
-    const voteSection = state.resultsRevealed ? `
+    let voteSection;
+    if (d.eliminated) {
+      voteSection = ''; // no vote section for eliminated dresses
+    } else if (state.resultsRevealed) {
+      const btnLabel = isMine ? '✓ Your vote' : state.hasVoted ? `Switch to ${d.letter}` : `Vote for ${d.letter}`;
+      voteSection = `
         <div class="vote-section">
           <div class="vote-meta">
             <span class="vote-count">${count} <em>${count === 1 ? 'vote' : 'votes'}</em></span>
@@ -588,15 +619,19 @@ function render() {
               : '<em style="opacity:0.55;">no votes yet</em>'
           }</div>
           <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
-        </div>` : `
+        </div>`;
+    } else {
+      const btnLabel = isMine ? '✓ Your vote' : state.hasVoted ? `Switch to ${d.letter}` : `Vote for ${d.letter}`;
+      voteSection = `
         <div class="vote-section">
           <button class="vote-btn ${isMine ? 'is-voted' : ''}" data-dress="${d.id}">${btnLabel}</button>
         </div>`;
+    }
 
     const card = document.createElement('article');
-    card.className = 'dress' + (isLeader ? ' is-leading' : '');
+    card.className = 'dress' + (isLeader && !d.eliminated ? ' is-leading' : '') + (d.eliminated ? ' is-eliminated' : '');
     card.innerHTML = `
-      <span class="leading-tag">in the lead</span>
+      ${d.eliminated ? '<span class="eliminated-tag">eliminated</span>' : '<span class="leading-tag">in the lead</span>'}
       <span class="dress-letter">${d.letter}</span>
       ${imgBlock}
       <div class="dress-info">
@@ -611,7 +646,10 @@ function render() {
   }
 
   container.querySelectorAll('.vote-btn').forEach(btn => {
-    btn.addEventListener('click', () => openVoteModal(btn.dataset.dress));
+    const dress = DRESS_BY_ID[btn.dataset.dress];
+    if (!dress?.eliminated) {
+      btn.addEventListener('click', () => openVoteModal(btn.dataset.dress));
+    }
   });
 
   // Comments — only shown when results are revealed
